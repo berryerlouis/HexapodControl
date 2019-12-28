@@ -35,12 +35,17 @@ namespace HexapodControl
         private static Bot bot = new Bot();
 
 
-
+        public enum EConnectionStatus
+        {
+            CONNECTED,
+            DISCONNECTED,
+            CONNECTION_ERROR
+        };
 
         //declaration of the callback when bot is connected
-        public delegate void CallbackConnexionStatus(bool connected);
+        public delegate void CallbackConnectionStatus(EConnectionStatus connected);
         //callback variable
-        private CallbackConnexionStatus callbackConnexionStatus = null;
+        private CallbackConnectionStatus callbackConnectionStatus = null;
 
         //declaration of the callback when version is updated
         public delegate void CallbackUpdateVersion(string version);
@@ -87,20 +92,20 @@ namespace HexapodControl
                     SendDataToHexapod(Protocol.GetInstance().ReadVersion());
                     //read all servos
                     SendDataToHexapod(Protocol.GetInstance().ReadAllServos());
-                    this.callbackConnexionStatus(true);
+                    this.callbackConnectionStatus(EConnectionStatus.CONNECTED);
                     return true;
                 }
                 catch
                 {
                     Comm.GetInstance().Close();
-                    this.callbackConnexionStatus(false);
+                    this.callbackConnectionStatus(EConnectionStatus.CONNECTION_ERROR);
                     return false;
                 }
             }
             else
             {
                 Comm.GetInstance().Close();
-                this.callbackConnexionStatus(false);
+                this.callbackConnectionStatus(EConnectionStatus.DISCONNECTED);
                 return false;
             }
         }
@@ -118,7 +123,7 @@ namespace HexapodControl
                     Comm.GetInstance().RemoveCallBackReceive(DataFromHexapod);
                     Comm.GetInstance().RemoveCallBackSentFrame(DataToHexapod);
                     Comm.GetInstance().Close();
-                    this.callbackConnexionStatus(false);
+                    this.callbackConnectionStatus(EConnectionStatus.DISCONNECTED);
                     return true;
                 }
                 catch
@@ -130,12 +135,12 @@ namespace HexapodControl
         }
 
         /// <summary>
-        /// set the callback, hits when bot connexion changed
+        /// set the callback, hits when bot connection changed
         /// </summary>
-        /// <param name="CallbackConnexionStatus">callback to set when data has been received</param>
-        public void SetCallbackConnexionStatus(CallbackConnexionStatus callbackConnexionStatus)
+        /// <param name="CallbackConnectionStatus">callback to set when data has been received</param>
+        public void SetCallbackConnectionStatus(CallbackConnectionStatus callbackConnexionStatus)
         {
-            this.callbackConnexionStatus = callbackConnexionStatus;
+            this.callbackConnectionStatus = callbackConnexionStatus;
         }
 
         /// <summary>

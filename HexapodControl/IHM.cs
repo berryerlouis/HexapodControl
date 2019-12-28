@@ -12,20 +12,27 @@ namespace HexapodControl
 {
     public partial class IHM : Form
     {
-        UserLog ul = new UserLog();
-        UserShow us = new UserShow();
+        List<UserControl> userControls = new List<UserControl>() 
+        { 
+            new UserLog(), 
+            new UserShow()
+        };
+
         public IHM()
         {
             InitializeComponent();
 
-            Bot.GetInstance().SetCallbackConnexionStatus(ConnexionStatusChanged);
+            Bot.GetInstance().SetCallbackConnectionStatus(ConnectionStatusChanged);
             Bot.GetInstance().SetCallbackUpdateVersion(UpdateVersion);
-            panelBackground.Controls.Add(ul);
-            panelBackground.Controls[panelBackground.Controls.IndexOf(ul)].Dock = System.Windows.Forms.DockStyle.Fill;
-            panelBackground.Controls[panelBackground.Controls.IndexOf(ul)].Hide();
-            panelBackground.Controls.Add(us);
-            panelBackground.Controls[panelBackground.Controls.IndexOf(us)].Dock = System.Windows.Forms.DockStyle.Fill;
-            panelBackground.Controls[panelBackground.Controls.IndexOf(us)].Hide();
+            //add user control to panelBackground
+            for (int i = 0; i < userControls.Count; i++)
+            {
+                UserControl uc = userControls[i];
+                panelBackground.Controls.Add(uc);
+                panelBackground.Controls[panelBackground.Controls.IndexOf(uc)].Dock = System.Windows.Forms.DockStyle.Fill;
+                if(!(uc is UserShow))
+                panelBackground.Controls[panelBackground.Controls.IndexOf(uc)].Hide();
+            }
         }
 
 
@@ -44,9 +51,18 @@ namespace HexapodControl
         }
         private void buttonLog_Click(object sender, EventArgs e)
         {
-            Control c = panelBackground.Controls[panelBackground.Controls.IndexOf(ul)];
+            Control c = null;
+            for (int i = 0; i < userControls.Count; i++)
+            {
+                UserControl uc = userControls[i];
+                if (uc is UserLog)
+                {
+                    c = uc;
+                }
+            }
             if (!c.Visible)
             {
+                c.BringToFront();
                 c.Show();
             }
             else
@@ -56,9 +72,18 @@ namespace HexapodControl
         }
         private void buttonShowBot_Click(object sender, EventArgs e)
         {
-            Control c = panelBackground.Controls[panelBackground.Controls.IndexOf(us)];
+            Control c = null;
+            for (int i = 0; i < userControls.Count; i++)
+            {
+                UserControl uc = userControls[i];
+                if (uc is UserShow)
+                {
+                    c = uc;
+                }
+            }
             if (!c.Visible)
             {
+                c.BringToFront();
                 c.Show();
             }
             else
@@ -68,20 +93,28 @@ namespace HexapodControl
         }
         #endregion
 
-
-
-
-        private void ConnexionStatusChanged(bool connected)
+        #region events
+        private void ConnectionStatusChanged(Bot.EConnectionStatus status)
         {
-            if(connected)
+            if (status == Bot.EConnectionStatus.CONNECTED)
             {
                 this.buttonConnect.Text = "Disconnect";
                 this.buttonConnect.ForeColor = System.Drawing.Color.Red;
             }
             else
             {
+                //change
                 this.buttonConnect.Text = "Connect";
                 this.buttonConnect.ForeColor = System.Drawing.Color.Green;
+                if (status == Bot.EConnectionStatus.CONNECTION_ERROR)
+                { 
+                    //ask to user to retry or not
+                    DialogResult dr = MessageBox.Show("Connection failed !", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    if (dr == DialogResult.Retry)
+                    {
+                        Bot.GetInstance().Connect();
+                    }
+                }
             }
         }
 
@@ -92,5 +125,6 @@ namespace HexapodControl
                 this.labelVersion.Text = "Version : " + version;
             }));
         }
+        #endregion
     }
 }
