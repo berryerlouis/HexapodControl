@@ -54,7 +54,7 @@ namespace HexapodControl
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            if(this.comboBoxPortCom.SelectedItem.ToString() != "" && !Comm.GetInstance().IsOpen())
+            if(this.comboBoxPortCom.SelectedItem != null && this.comboBoxPortCom.SelectedItem.ToString() != "" && !Comm.GetInstance().IsOpen())
             {
                 try
                 {

@@ -18,6 +18,7 @@ namespace HexapodControl
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+            timeRadar.Enabled = false;
             Comm.GetInstance().SetCallBackReceive(DataFromHexapod);
             Comm.GetInstance().SetCallBackSentFrame(DataToHexapod);
         }
@@ -30,6 +31,9 @@ namespace HexapodControl
         {
             if (data.GetStatus() == Comm.HexapodResponse.Status.NO_ERROR)
             {
+                //enable radar timer 
+                timeRadar.Enabled = true;
+
                 Protocol.Frame frame = Protocol.GetInstance().Parse(data.GetResponse());
                 if (frame.cmdId == Protocol.CMD_ID_READ_SERVOS)
                 {
@@ -47,8 +51,8 @@ namespace HexapodControl
             // Create pen.
             Pen pg = new Pen(Color.Gray, 2);
             Pen pw = new Pen(Color.White, 2);
-            Pen pus = new Pen(Color.LightGreen, 1);
-            Pen pir = new Pen(Color.IndianRed, 1);
+            Pen pus = new Pen(Color.LightGreen, 2);
+            Pen pir = new Pen(Color.IndianRed, 2);
 
             //size of user control
             int width = ((UserControl)(sender)).Width;

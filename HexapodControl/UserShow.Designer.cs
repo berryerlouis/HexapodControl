@@ -40,7 +40,7 @@
             // 
             // trackBarTibiaAngle
             // 
-            this.trackBarTibiaAngle.Location = new System.Drawing.Point(143, 52);
+            this.trackBarTibiaAngle.Location = new System.Drawing.Point(156, 50);
             this.trackBarTibiaAngle.Maximum = 50;
             this.trackBarTibiaAngle.Minimum = -50;
             this.trackBarTibiaAngle.Name = "trackBarTibiaAngle";
@@ -53,18 +53,19 @@
             // 
             // trackBarFemurAngle
             // 
-            this.trackBarFemurAngle.Location = new System.Drawing.Point(81, 52);
+            this.trackBarFemurAngle.Location = new System.Drawing.Point(94, 50);
             this.trackBarFemurAngle.Maximum = 90;
             this.trackBarFemurAngle.Name = "trackBarFemurAngle";
             this.trackBarFemurAngle.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBarFemurAngle.Size = new System.Drawing.Size(56, 229);
             this.trackBarFemurAngle.TabIndex = 1;
             this.trackBarFemurAngle.TickFrequency = 15;
+            this.trackBarFemurAngle.Value = 45;
             this.trackBarFemurAngle.ValueChanged += new System.EventHandler(this.trackBarAngle_ValueChanged);
             // 
             // trackBarCoxaAngle
             // 
-            this.trackBarCoxaAngle.Location = new System.Drawing.Point(19, 52);
+            this.trackBarCoxaAngle.Location = new System.Drawing.Point(32, 50);
             this.trackBarCoxaAngle.Maximum = 30;
             this.trackBarCoxaAngle.Minimum = -30;
             this.trackBarCoxaAngle.Name = "trackBarCoxaAngle";
