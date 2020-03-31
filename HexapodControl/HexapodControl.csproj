@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,14 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bot.cs" />
-    <Compile Include="Comm.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Bot\Bot.cs" />
+    <Compile Include="Bot\Servos.cs" />
+    <Compile Include="Bot\Servo.cs" />
+    <Compile Include="Clusters\ClusterLeg.cs" />
+    <Compile Include="Clusters\ClusterBehavior.cs" />
+    <Compile Include="Clusters\ClusterUltrason.cs" />
+    <Compile Include="Clusters\Commands\Commands.cs" />
+    <Compile Include="Clusters\Commands\Command.cs" />
+    <Compile Include="Clusters\ICluster.cs" />
+    <Compile Include="Comm\HexapodResponse.cs" />
+    <Compile Include="Clusters\Commands\ICommand.cs" />
+    <Compile Include="Comm\IComm.cs" />
+    <Compile Include="Clusters\ClustersID.cs" />
+    <Compile Include="Clusters\ClusterServo.cs" />
+    <Compile Include="Clusters\ClusterGeneral.cs" />
+    <Compile Include="Clusters\Cluster.cs" />
+    <Compile Include="Clusters\ClusterImu.cs" />
+    <Compile Include="Comm\Comm.cs" />
     <Compile Include="IHM.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,22 +73,61 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol.cs" />
-    <Compile Include="UserLog.cs">
+    <Compile Include="Comm\Protocol.cs" />
+    <Compile Include="UserControls\UserConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserLog.Designer.cs">
+    <Compile Include="UserControls\UserConfig.Designer.cs">
+      <DependentUpon>UserConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigLeg.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigLeg.Designer.cs">
+      <DependentUpon>UserConfigLeg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigBody.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigBody.Designer.cs">
+      <DependentUpon>UserConfigBody.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigBehavior.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigBehavior.Designer.cs">
+      <DependentUpon>UserConfigBehavior.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigUltrason.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigUltrason.Designer.cs">
+      <DependentUpon>UserConfigUltrason.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigServo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigServo.Designer.cs">
+      <DependentUpon>UserConfigServo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserConfigIMU.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserConfigIMU.Designer.cs">
+      <DependentUpon>UserConfigIMU.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserLog.Designer.cs">
       <DependentUpon>UserLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserShow.cs">
+    <Compile Include="UserControls\UserShow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserShow.Designer.cs">
+    <Compile Include="UserControls\UserShow.Designer.cs">
       <DependentUpon>UserShow.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="IHM.resx">
       <DependentUpon>IHM.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,10 +140,31 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UserLog.resx">
+    <EmbeddedResource Include="UserControls\UserConfig.resx">
+      <DependentUpon>UserConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigLeg.resx">
+      <DependentUpon>UserConfigLeg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigBody.resx">
+      <DependentUpon>UserConfigBody.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigBehavior.resx">
+      <DependentUpon>UserConfigBehavior.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigUltrason.resx">
+      <DependentUpon>UserConfigUltrason.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigServo.resx">
+      <DependentUpon>UserConfigServo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserConfigIMU.resx">
+      <DependentUpon>UserConfigIMU.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserLog.resx">
       <DependentUpon>UserLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserShow.resx">
+    <EmbeddedResource Include="UserControls\UserShow.resx">
       <DependentUpon>UserShow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">

@@ -12,29 +12,33 @@ namespace HexapodControl
 {
     public partial class IHM : Form
     {
-        List<UserControl> userControls = new List<UserControl>() 
-        { 
-            new UserLog(), 
-            new UserShow()
+        public static List<UserControl> userControls = new List<UserControl>()
+        {
+            new UserLog(),
+            new UserShow(),
+            new UserConfig()
         };
 
         public IHM()
         {
             InitializeComponent();
 
+            DoubleBuffered = true;
             Bot.GetInstance().SetCallbackConnectionStatus(ConnectionStatusChanged);
-            Bot.GetInstance().SetCallbackUpdateVersion(UpdateVersion);
+
             //add user control to panelBackground
             for (int i = 0; i < userControls.Count; i++)
             {
                 UserControl uc = userControls[i];
                 panelBackground.Controls.Add(uc);
                 panelBackground.Controls[panelBackground.Controls.IndexOf(uc)].Dock = System.Windows.Forms.DockStyle.Fill;
-                if(!(uc is UserShow))
-                panelBackground.Controls[panelBackground.Controls.IndexOf(uc)].Hide();
             }
         }
 
+        private void IHM_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Bot.GetInstance().Disconnect();
+        }
 
         #region buttons
         private void buttonConnect_Click(object sender, EventArgs e)
@@ -43,52 +47,64 @@ namespace HexapodControl
             {
 
                 Bot.GetInstance().Connect();
+                //read version
+                Bot.GetInstance().SendData(ClusterGeneral.ReadVersion((List <Object> obj) =>
+                {
+                    this.labelVersion.Invoke(new MethodInvoker(delegate
+                    {
+                        this.labelVersion.Text = "Version : " + obj[0];
+                    }));
+                },true));
             }
             else
             {
                 Bot.GetInstance().Disconnect();
             }
         }
+
         private void buttonLog_Click(object sender, EventArgs e)
         {
-            Control c = null;
             for (int i = 0; i < userControls.Count; i++)
             {
                 UserControl uc = userControls[i];
                 if (uc is UserLog)
                 {
-                    c = uc;
+                    uc.BringToFront();
                 }
-            }
-            if (!c.Visible)
-            {
-                c.BringToFront();
-                c.Show();
-            }
-            else
-            {
-                c.Hide();
+                else
+                {
+                    uc.SendToBack();
+                }
             }
         }
         private void buttonShowBot_Click(object sender, EventArgs e)
         {
-            Control c = null;
             for (int i = 0; i < userControls.Count; i++)
             {
                 UserControl uc = userControls[i];
                 if (uc is UserShow)
                 {
-                    c = uc;
+                    uc.BringToFront();
+                }
+                else
+                {
+                    uc.SendToBack();
                 }
             }
-            if (!c.Visible)
+        }
+        private void buttonConfig_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < userControls.Count; i++)
             {
-                c.BringToFront();
-                c.Show();
-            }
-            else
-            {
-                c.Hide();
+                UserControl uc = userControls[i];
+                if (uc is UserConfig)
+                {
+                    uc.BringToFront();
+                }
+                else
+                {
+                    uc.SendToBack();
+                }
             }
         }
         #endregion
@@ -117,14 +133,9 @@ namespace HexapodControl
                 }
             }
         }
-
-        private void UpdateVersion(string version)
-        {
-            this.labelVersion.Invoke(new MethodInvoker(delegate
-            {
-                this.labelVersion.Text = "Version : " + version;
-            }));
-        }
+        
         #endregion
+
+
     }
 }
